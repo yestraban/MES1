@@ -51,35 +51,36 @@ class Element4w:
         del data
 
 class Jakobian:
-    def __init__(self, nkfs : list, element4w, npc):
-        self.dXdZ = 0
-        self.dXdE = 0
-        self.dYdZ = 0
-        self.dYdE = 0
-        for b in range(4):
-            self.dXdZ += nkfs[b].x * element4w.dNdZ[b][npc]
-            self.dXdE += nkfs[b].x * element4w.dNdE[b][npc]
-            self.dYdZ += nkfs[b].y * element4w.dNdZ[b][npc]
-            self.dYdE += nkfs[b].y * element4w.dNdE[b][npc]
-        self.det = (self.dXdZ * self.dYdE) - (self.dXdE * self.dYdZ)
-
-    # def __init__(self, grid, i, element4w, npc):
+    # def __init__(self, nkfs : list, element4w, npc):
     #     self.dXdZ = 0
     #     self.dXdE = 0
     #     self.dYdZ = 0
     #     self.dYdE = 0
-    #     nodes = []
-    #     for a in range(4):
-    #         nodes.append(grid.elements[i].id[a])
-    #         nodes[a] = grid.nodes[nodes[a]]
-    #
     #     for b in range(4):
-    #         self.dXdZ += nodes[b].x * element4w.dNdZ[b][npc]
-    #         self.dXdE += nodes[b].x * element4w.dNdE[b][npc]
-    #         self.dYdZ += nodes[b].y * element4w.dNdZ[b][npc]
-    #         self.dYdE += nodes[b].y * element4w.dNdE[b][npc]
-    #
+    #         self.dXdZ += nkfs[b].x * element4w.dNdZ[b][npc]
+    #         self.dXdE += nkfs[b].x * element4w.dNdE[b][npc]
+    #         self.dYdZ += nkfs[b].y * element4w.dNdZ[b][npc]
+    #         self.dYdE += nkfs[b].y * element4w.dNdE[b][npc]
     #     self.det = (self.dXdZ * self.dYdE) - (self.dXdE * self.dYdZ)
+
+    def __init__(self, grid, i, element4w, npc):
+        self.dXdZ = 0
+        self.dXdE = 0
+        self.dYdZ = 0
+        self.dYdE = 0
+        nodes = []
+        print(grid.elements[i].id)
+        for a in range(4):
+            temp = grid.elements[i].id[a]
+            nodes.append(grid.nodes[temp-1])
+
+        for b in range(4):
+            self.dXdZ += nodes[b].x * element4w.dNdZ[b][npc]
+            self.dXdE += nodes[b].x * element4w.dNdE[b][npc]
+            self.dYdZ += nodes[b].y * element4w.dNdZ[b][npc]
+            self.dYdE += nodes[b].y * element4w.dNdE[b][npc]
+
+        self.det = (self.dXdZ * self.dYdE) - (self.dXdE * self.dYdZ)
 
 class JakobianOdw:
     def __init__(self, jakobian):
@@ -194,16 +195,29 @@ if __name__ == '__main__':
     nds = []
     for i in range(4):
         nds.append(Node(tabx[i], taby[i]))
-    element = Element4w(3)
+    element = Element4w(2)
     grid = Grid(nodes, elements)
-    #jak = Jakobian(grid, 0, element, 0)
-    jak = Jakobian(nds, element, 0)
-    print(jak.dXdZ, " ", jak.dYdZ)
-    print(jak.dXdE, " ", jak.dYdE)
-    odwJak = JakobianOdw(jak);
-    print()
-    print(odwJak.dYdE, " ", odwJak.mdYdZ)
-    print(odwJak.mdXdE, " ", odwJak.dXdZ)
+    # jak = Jakobian(nds, element, 0)
+    # print(jak.dXdZ, " ", jak.dYdZ)
+    # print(jak.dXdE, " ", jak.dYdE)
+    # odwJak = JakobianOdw(jak);
+    # print()
+    # print(odwJak.dYdE, " ", odwJak.mdYdZ)
+    # print(odwJak.mdXdE, " ", odwJak.dXdZ)
+
+    for i in range(len(grid.elements)):
+        for j in range(element.npc*element.npc):
+            jak = Jakobian(grid, i, element, j)
+            print(jak.dXdZ, " ", jak.dYdZ)
+            print(jak.dXdE, " ", jak.dYdE)
+            odwJak = JakobianOdw(jak)
+            print()
+            print(odwJak.dYdE, " ", odwJak.mdYdZ)
+            print(odwJak.mdXdE, " ", odwJak.dXdZ)
+            print()
+        print("==================================")
+        print()
+
 
     # for i in range(9):
     #     for j in range(4):
