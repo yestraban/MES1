@@ -13,6 +13,7 @@ class Node:
 class Element:
     def __init__(self, id1, id2, id3, id4):
         self.id = [id1, id2, id3, id4]
+    H = [[0 for _ in range(4)] for _ in range(4)]
 
 class Element4w:
     def __init__(self, npc):
@@ -88,16 +89,35 @@ class JakobianOdw:
         self.mdYdZ = (1/jakobian.det) * (-jakobian.dYdZ)
         self.mdXdE = (1/jakobian.det) * (-jakobian.dXdE)
         self.dXdZ = (1/jakobian.det) * (jakobian.dXdZ)
+        self.det = jakobian.det
 
+class MacierzSztywnosciH:
+    def __init__(self, jakobianOdw, npc, element):
+        self.H = [[0 for _ in range(4)] for _ in range(4)]
+        data = GlobalData()
+        for i in range(npc*npc):
+            self.dNdX = []
+            self.dNdY = []
+            for j in range(4):
+                self.dNdX.append(jakobianOdw.dYdE * element.dNdZ[j][i] + jakobianOdw.mdYdZ * element.dNdE[j][i])
+                self.dNdY.append(jakobianOdw.mdXdE * element.dNdZ[j][i] + jakobianOdw.dXdZ * element.dNdE[j][i])
+            tempH = [[0 for _ in range(4)] for _ in range(4)]
+
+            for i in range(4):
+                for j in range(4):
+                    tempH[i][j] = self.dNdX[j]*self.dNdX[i] + self.dNdY[i]*self.dNdY[j]
+                    tempH[i][j] *= data.k * jakobianOdw.det
+                    self.H[i][j] += tempH[i][j]
 
 class GlobalData:
     h = 0.5
-    b = 0.1
+    b = 0.4
     nH = 5
     nB = 4
     wagi3p = [5/9, 8/9, 5/9]
     wezly2p = [-1/numpy.sqrt(3), 1/numpy.sqrt(3)]
     wezly3p = [-numpy.sqrt(3/5), 0, numpy.sqrt(3/5)]
+    k = 30
 
 def funkcja_1d(x):
     wynik = 5*x*x
@@ -215,17 +235,14 @@ if __name__ == '__main__':
             print(odwJak.dYdE, " ", odwJak.mdYdZ)
             print(odwJak.mdXdE, " ", odwJak.dXdZ)
             print()
-        print("==================================")
-        print()
+            h = MacierzSztywnosciH(odwJak, 2, element)
+            grid.elements[i].H = h
 
+    print("==================================")
+    print()
+    print("Macierze sztywnosci H:")
 
-    # for i in range(9):
-    #     for j in range(4):
-    #         print(element.dNdE[j][i], end=' ')
-    #     print()
-    # print()
-    #
-    # for i in range(9):
-    #     for j in range(4):
-    #         print(element.dNdZ[j][i], end=' ')
-    #     print('')
+    for i in range(len(grid.elements)):
+        for j in range(4):
+            print(grid.elements[i].H.H[j])
+        print("++++++++++++++++++++++++++++++++++")
