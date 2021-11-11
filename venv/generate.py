@@ -13,6 +13,9 @@ def generate_elements(data):
     n = 1
     for i in range(data.nB-1):
         for j in range(data.nH-1):
-            elements.append(gridElements.Element(n+j, n+data.nH+j, n+data.nH+1+j, n+1+j))
+            if ((i==0) or (i==data.nB-1)) or ((j==0) or (j==data.nB-1)):
+                elements.append(gridElements.Element(n+j, n+data.nH+j, n+data.nH+1+j, n+1+j, 1))
+            else:
+                elements.append(gridElements.Element(n+j, n+data.nH+j, n+data.nH+1+j, n+1+j, 0))
         n += data.nH
     return elements

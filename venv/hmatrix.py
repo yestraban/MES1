@@ -1,4 +1,5 @@
 import gdata
+import diff
 
 class Jakobian:
     # def __init__(self, nkfs : list, element4w, npc):
@@ -59,5 +60,29 @@ class MacierzSztywnosciH:
                     self.H[i][j] += tempH[i][j]
 
 class Hbc:
-    def __init__(self, element, npc):
+    def __init__(self, element, npc, jakobian):
         data = gdata.GlobalData()
+        self.Hbc = [[0 for _ in range(4)] for _ in range(4)]
+        tempH = [[0 for _ in range(4)] for _ in range(4)]
+        if(npc == 3):
+                                        #to jest bardzo nieczytelne rozwiązanie
+            for i in range(4):              #pętla dla ilości boków
+                for j in range(4):          #pętla dla N poziomych
+                    for k in range(4):      #pętla dla N pionowych
+                        temp = 0
+                        for l in range(npc):  #pętla dla ilości punktów całkowania
+                            temp += data.wagi3p[npc] * diff.funkcjaKsztaltuN(element.pcb[i][npc],j) * diff.funkcjaKsztaltuN(element.pcb[i][npc],k)
+                            #dodawanie osobno wartości dla każdego miejsca w macierzy Hbc[j][k]
+                            #praktycznie: waga pc * N[j] * N[k], to powtórzone dla każdego punktu całkowania na boku i, oraz zsumowane
+                        temp *= data.alpha * jakobian.det       #mnożenie przez stałe dla każdej wartości
+                        self.Hbc[j][k] += temp
+
+        else:
+            for i in range(4):              #to samo co wyżej, tylko nie ma tu wag bo w dwupunktowym całkowaniu są równe 1
+                for j in range(4):
+                    for k in range(4):
+                        temp = 0.0
+                        for l in range(npc):  #pętla dla ilości punktów całkowania
+                            temp += diff.funkcjaKsztaltuN(element.pcb[i][l],j) * diff.funkcjaKsztaltuN(element.pcb[i][l],k)
+                        temp *= data.alpha * jakobian.det
+                        self.Hbc[j][k] += temp

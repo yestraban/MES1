@@ -58,6 +58,8 @@ if __name__ == '__main__':
             print()
             h = hmatrix.MacierzSztywnosciH(odwJak, 2, element)
             grid.elements[i].H = h
+            hbc = hmatrix.Hbc(element, 2, jak)
+            grid.elements[i].Hbc = hbc
 
     print("==================================")
     print()
@@ -65,5 +67,6 @@ if __name__ == '__main__':
 
     for i in range(len(grid.elements)):
         for j in range(4):
-            print(grid.elements[i].H.H[j])
+            #print(grid.elements[i].H.H[j])  #macierz H
+            print(grid.elements[i].Hbc.Hbc[j])   #macierz Hbc
         print("++++++++++++++++++++++++++++++++++")

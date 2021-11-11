@@ -7,10 +7,11 @@ class Node:
 
 
 class Element:
-    def __init__(self, id1, id2, id3, id4):
+    def __init__(self, id1, id2, id3, id4, bc):
         self.id = [id1, id2, id3, id4]
+        self.bc = bc
     H = [[0 for _ in range(4)] for _ in range(4)]
-    bc = 0
+    Hbc = [[0 for _ in range(4)] for _ in range(4)]
 
 
 class Element4w:
@@ -19,6 +20,7 @@ class Element4w:
         self.dNdZ = [[0 for _ in range(npc*npc)]  for _ in range(4)]
         self.dNdE = [[0 for _ in range(npc*npc)]  for _ in range(4)]
         self.npc = npc
+        self.pcb = [[0 for _ in range(npc)] for _ in range(4)]
         data = gdata.GlobalData()
 
         if npc == 2:
@@ -48,7 +50,13 @@ class Element4w:
             self.dNdE[2][j] = 1.0 / 4*(1 + self.pc[j].x)
             self.dNdE[3][j] = 1.0 / 4*(1 - self.pc[j].x)
 
-        
+
+        for i in range(npc):
+            self.pcb[0][i] = Node(-1, wezly[i])
+            self.pcb[1][i] = Node(wezly[i], -1)
+            self.pcb[2][i] = Node(1, wezly[i])
+            self.pcb[3][i] = Node(wezly[i], 1)
+
         del data
 
 

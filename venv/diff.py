@@ -42,3 +42,13 @@ def calkowanie_gaussa_2d(funkcja, p):
                 suma += funkcja(gdata.wezly3p[i], gdata.wezly3p[j]) * gdata.wagi3p[i] * gdata.wagi3p[j]
 
     return suma
+
+def funkcjaKsztaltuN(node, i):
+    if i == 0:
+        return (1/4*(1-node.x)*(1-node.y))
+    elif i == 1:
+        return (1/4*(1+node.x)*(1-node.y))
+    elif i == 2:
+        return (1/4*(1+node.x)*(1+node.y))
+    elif i == 3:
+        return (1/4*(1-node.x)*(1+node.y))
