@@ -1,15 +1,15 @@
 import gdata
 
 class Node:
-    def __init__(self, x, y):
+    def __init__(self, x, y, bc=0):
         self.x = x
         self.y = y
+        self.bc = bc
 
 
 class Element:
-    def __init__(self, id1, id2, id3, id4, bc):
+    def __init__(self, id1, id2, id3, id4):
         self.id = [id1, id2, id3, id4]
-        self.bc = bc
     H = [[0 for _ in range(4)] for _ in range(4)]
     Hbc = [[0 for _ in range(4)] for _ in range(4)]
 

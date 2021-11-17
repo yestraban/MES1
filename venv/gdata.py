@@ -9,4 +9,4 @@ class GlobalData:
     wezly2p = [-1/numpy.sqrt(3), 1/numpy.sqrt(3)]
     wezly3p = [-numpy.sqrt(3/5), 0, numpy.sqrt(3/5)]
     k = 30
-    alpha = 25  #dopytać
+    alpha = 25  #jest git, tylko trzeba dać możliwość zmieniania dla każdego elementu

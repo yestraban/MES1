@@ -1,5 +1,6 @@
 import gdata
 import diff
+import numpy
 
 class Jakobian:
     # def __init__(self, nkfs : list, element4w, npc):
@@ -60,10 +61,25 @@ class MacierzSztywnosciH:
                     self.H[i][j] += tempH[i][j]
 
 class Hbc:
-    def __init__(self, element, npc, jakobian):
+    def __init__(self, element, npc, grid, i):
         data = gdata.GlobalData()
         self.Hbc = [[0 for _ in range(4)] for _ in range(4)]
         tempH = [[0 for _ in range(4)] for _ in range(4)]
+        nodes = []
+        sides = []
+        for a in range(4):
+            temp = grid.elements[i].id[a]
+            nodes.append(grid.nodes[temp - 1])
+
+        sides.append((numpy.sqrt((nodes[3].x - nodes[0].x) * (nodes[3].x - nodes[0].x) + (nodes[3].y - nodes[0].y) * (
+                    nodes[3].y - nodes[0].y)))*nodes[0].bc*nodes[3].bc) #dopytać czy może być tak że mnożenie przez warunek brzegowy nodeów na boku
+
+        for b in range(3):
+            sides.append(numpy.sqrt(
+                ((nodes[b].x - nodes[b + 1].x) * (nodes[b].x - nodes[b + 1].x) + (nodes[b].y - nodes[b + 1].y) * (
+                        nodes[b].y - nodes[b + 1].y)))*nodes[b].bc*nodes[b+1].bc)
+
+
         if(npc == 3):
                                         #to jest bardzo nieczytelne rozwiązanie
             for i in range(4):              #pętla dla ilości boków
@@ -74,7 +90,7 @@ class Hbc:
                             temp += data.wagi3p[npc] * diff.funkcjaKsztaltuN(element.pcb[i][npc],j) * diff.funkcjaKsztaltuN(element.pcb[i][npc],k)
                             #dodawanie osobno wartości dla każdego miejsca w macierzy Hbc[j][k]
                             #praktycznie: waga pc * N[j] * N[k], to powtórzone dla każdego punktu całkowania na boku i, oraz zsumowane
-                        temp *= data.alpha * jakobian.det       #mnożenie przez stałe dla każdej wartości
+                        temp *= data.alpha * sides[i]/2       #mnożenie przez stałe dla każdej wartości i długość boku
                         self.Hbc[j][k] += temp
 
         else:
@@ -84,5 +100,5 @@ class Hbc:
                         temp = 0.0
                         for l in range(npc):  #pętla dla ilości punktów całkowania
                             temp += diff.funkcjaKsztaltuN(element.pcb[i][l],j) * diff.funkcjaKsztaltuN(element.pcb[i][l],k)
-                        temp *= data.alpha * jakobian.det
+                        temp *= data.alpha * sides[i]/2
                         self.Hbc[j][k] += temp

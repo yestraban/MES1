@@ -31,13 +31,15 @@ if __name__ == '__main__':
   #  print(wynik)
 
 
-    tabx = [0, 0.025, 0.025, 0]
-    taby = [0, 0, 0.025, 0.025]
-    nds = []
-    for i in range(4):
-        nds.append(gridElements.Node(tabx[i], taby[i]))
+    # tabx = [0, 0.025, 0.025, 0]
+    # taby = [0, 0, 0.025, 0.025]
+    # nds = []
+    # for i in range(4):
+    #     nds.append(gridElements.Node(tabx[i], taby[i]))
+
     element = gridElements.Element4w(2)
     grid = gridElements.Grid(nodes, elements)
+
     # jak = Jakobian(nds, element, 0)
     # print(jak.dXdZ, " ", jak.dYdZ)
     # print(jak.dXdE, " ", jak.dYdE)
@@ -58,7 +60,7 @@ if __name__ == '__main__':
             print()
             h = hmatrix.MacierzSztywnosciH(odwJak, 2, element)
             grid.elements[i].H = h
-            hbc = hmatrix.Hbc(element, 2, jak)
+            hbc = hmatrix.Hbc(element, 2, grid, i)
             grid.elements[i].Hbc = hbc
 
     print("==================================")
