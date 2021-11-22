@@ -67,8 +67,11 @@ if __name__ == '__main__':
     print()
     print("Macierze sztywnosci H:")
 
-    for i in range(len(grid.elements)):
-        for j in range(4):
-            #print(grid.elements[i].H.H[j])  #macierz H
-            print(grid.elements[i].Hbc.Hbc[j])   #macierz Hbc
-        print("++++++++++++++++++++++++++++++++++")
+    # for i in range(len(grid.elements)):
+    #     for j in range(4):
+    #         #print(grid.elements[i].H.H[j])  #macierz H
+    #         print(grid.elements[i].Hbc.Hbc[j])   #macierz Hbc
+    #     print("++++++++++++++++++++++++++++++++++")
+    temp = generate.agregate(grid)
+    for i in range(len(grid.nodes)):
+        print(temp[i])

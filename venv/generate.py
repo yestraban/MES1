@@ -20,3 +20,11 @@ def generate_elements(data):
 
         n += data.nH
     return elements
+
+def agregate(grid):
+    Haggr = [[0 for _ in range(len(grid.nodes))] for _ in range(len(grid.nodes))]
+    for i in range(len(grid.elements)):
+        for x in range(4):
+            for y in range(4):
+                Haggr[grid.elements[i].id[x]-1][grid.elements[i].id[y]-1] += grid.elements[i].H.H[x][y]
+    return Haggr

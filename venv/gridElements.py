@@ -64,3 +64,4 @@ class Grid:
     def __init__(self, nodes, elements):
         self.nodes = nodes
         self.elements = elements
+        self.Haggr = [[0 for _ in range(len(nodes))] for _ in range(len(nodes))]
