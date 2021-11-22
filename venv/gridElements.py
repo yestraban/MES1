@@ -12,6 +12,7 @@ class Element:
         self.id = [id1, id2, id3, id4]
     H = [[0 for _ in range(4)] for _ in range(4)]
     Hbc = [[0 for _ in range(4)] for _ in range(4)]
+    Pmatrix = [0 for _ in range(4)]
 
 
 class Element4w:
@@ -65,3 +66,4 @@ class Grid:
         self.nodes = nodes
         self.elements = elements
         self.Haggr = [[0 for _ in range(len(nodes))] for _ in range(len(nodes))]
+        self.Paggr = [0 for _ in range(len(nodes))]

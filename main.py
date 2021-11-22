@@ -7,6 +7,7 @@ import diff
 import hmatrix
 import gdata
 import generate
+import pmatrix
 
 
 if __name__ == '__main__':
@@ -36,8 +37,8 @@ if __name__ == '__main__':
     # nds = []
     # for i in range(4):
     #     nds.append(gridElements.Node(tabx[i], taby[i]))
-
-    element = gridElements.Element4w(2)
+    npc = 3
+    element = gridElements.Element4w(npc)
     grid = gridElements.Grid(nodes, elements)
 
     # jak = Jakobian(nds, element, 0)
@@ -51,27 +52,31 @@ if __name__ == '__main__':
     for i in range(len(grid.elements)):
         for j in range(element.npc*element.npc):
             jak = hmatrix.Jakobian(grid, i, element, j)
-            print(jak.dXdZ, " ", jak.dYdZ)
-            print(jak.dXdE, " ", jak.dYdE)
+            # print(jak.dXdZ, " ", jak.dYdZ)
+            # print(jak.dXdE, " ", jak.dYdE)
             odwJak = hmatrix.JakobianOdw(jak)
-            print()
-            print(odwJak.dYdE, " ", odwJak.mdYdZ)
-            print(odwJak.mdXdE, " ", odwJak.dXdZ)
-            print()
-            h = hmatrix.MacierzSztywnosciH(odwJak, 2, element)
+            # print()
+            # print(odwJak.dYdE, " ", odwJak.mdYdZ)
+            # print(odwJak.mdXdE, " ", odwJak.dXdZ)
+            # print()
+            h = hmatrix.MacierzSztywnosciH(odwJak, npc, element)
             grid.elements[i].H = h
-            hbc = hmatrix.Hbc(element, 2, grid, i)
+            hbc = hmatrix.Hbc(element, npc, grid, i)
             grid.elements[i].Hbc = hbc
+            pm = pmatrix.Pmatrix(element, npc, grid, i)
+            grid.elements[i].Pmatrix = pm
 
     print("==================================")
     print()
-    print("Macierze sztywnosci H:")
+    print("Macierz P:")
 
     # for i in range(len(grid.elements)):
     #     for j in range(4):
     #         #print(grid.elements[i].H.H[j])  #macierz H
     #         print(grid.elements[i].Hbc.Hbc[j])   #macierz Hbc
     #     print("++++++++++++++++++++++++++++++++++")
-    temp = generate.agregate(grid)
+    temp = generate.hAgregate(grid)
+    temp2 = generate.pAgregate(grid)
     for i in range(len(grid.nodes)):
-        print(temp[i])
+            #print(temp[i])
+            print(temp2[i])

@@ -21,7 +21,6 @@ class Jakobian:
         self.dYdZ = 0
         self.dYdE = 0
         nodes = []
-        print(grid.elements[i].id)
         for a in range(4):
             temp = grid.elements[i].id[a]
             nodes.append(grid.nodes[temp-1])
@@ -87,7 +86,7 @@ class Hbc:
                     for k in range(4):      #pętla dla N pionowych
                         temp = 0
                         for l in range(npc):  #pętla dla ilości punktów całkowania
-                            temp += data.wagi3p[npc] * diff.funkcjaKsztaltuN(element.pcb[i][npc],j) * diff.funkcjaKsztaltuN(element.pcb[i][npc],k)
+                            temp += data.wagi3p[l] * diff.funkcjaKsztaltuN(element.pcb[i][l],j) * diff.funkcjaKsztaltuN(element.pcb[i][l],k)
                             #dodawanie osobno wartości dla każdego miejsca w macierzy Hbc[j][k]
                             #praktycznie: waga pc * N[j] * N[k], to powtórzone dla każdego punktu całkowania na boku i, oraz zsumowane
                         temp *= data.alpha * sides[i]/2       #mnożenie przez stałe dla każdej wartości i długość boku
