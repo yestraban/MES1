@@ -11,3 +11,5 @@ class GlobalData:
     k = 25
     alpha = 300  #jest git, tylko trzeba dać możliwość zmieniania dla każdego elementu
     temp = 1200
+    ro = 7800
+    cp = 700

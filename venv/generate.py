@@ -35,3 +35,11 @@ def pAgregate(grid):
         for x in range(4):
             Paggr[grid.elements[i].id[x] - 1] += grid.elements[i].Pmatrix.pmatrix[x]
     return Paggr
+
+def cAgregate(grid):
+    Caggr = [[0 for _ in range(len(grid.nodes))] for _ in range(len(grid.nodes))]
+    for i in range(len(grid.elements)):
+        for x in range(4):
+            for y in range(4):
+                Caggr[grid.elements[i].id[x] - 1][grid.elements[i].id[y] - 1] += grid.elements[i].Cmatrix.C[x][y]
+    return Caggr

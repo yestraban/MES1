@@ -45,19 +45,29 @@ class MacierzSztywnosciH:
     def __init__(self, jakobianOdw, npc, element):
         self.H = [[0 for _ in range(4)] for _ in range(4)]
         data = gdata.GlobalData()
-        for i in range(npc*npc):
-            self.dNdX = []
-            self.dNdY = []
-            for j in range(4):
-                self.dNdX.append(jakobianOdw.dYdE * element.dNdZ[j][i] + jakobianOdw.mdYdZ * element.dNdE[j][i])
-                self.dNdY.append(jakobianOdw.mdXdE * element.dNdZ[j][i] + jakobianOdw.dXdZ * element.dNdE[j][i])
-            tempH = [[0 for _ in range(4)] for _ in range(4)]
-
-            for i in range(4):
+        npcCounter = 0;
+        for n in range(npc):
+            for i in range(npc):
+                self.dNdX = []
+                self.dNdY = []
                 for j in range(4):
-                    tempH[i][j] = self.dNdX[j]*self.dNdX[i] + self.dNdY[i]*self.dNdY[j]
-                    tempH[i][j] *= data.k * jakobianOdw.det
-                    self.H[i][j] += tempH[i][j]
+                    self.dNdX.append(jakobianOdw.dYdE * element.dNdZ[j][npcCounter] + jakobianOdw.mdYdZ * element.dNdE[j][npcCounter])
+                    self.dNdY.append(jakobianOdw.mdXdE * element.dNdZ[j][npcCounter] + jakobianOdw.dXdZ * element.dNdE[j][npcCounter])
+                tempH = [[0 for _ in range(4)] for _ in range(4)]
+                npcCounter += 1
+
+                if(npc == 3):
+                    for k in range(4):
+                        for j in range(4):
+                            tempH[k][j] = self.dNdX[j]*self.dNdX[k] + self.dNdY[k]*self.dNdY[j]
+                            tempH[k][j] *= data.k * jakobianOdw.det * data.wagi3p[n]*data.wagi3p[i]
+                            self.H[k][j] += tempH[k][j]
+                else:
+                    for k in range(4):
+                        for j in range(4):
+                            tempH[k][j] = self.dNdX[j]*self.dNdX[k] + self.dNdY[k]*self.dNdY[j]
+                            tempH[k][j] *= data.k * jakobianOdw.det
+                            self.H[k][j] += tempH[k][j]
 
 class Hbc:
     def __init__(self, element, npc, grid, i):

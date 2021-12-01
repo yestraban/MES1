@@ -8,6 +8,7 @@ import hmatrix
 import gdata
 import generate
 import pmatrix
+import cmatrix
 
 
 if __name__ == '__main__':
@@ -38,6 +39,7 @@ if __name__ == '__main__':
     # for i in range(4):
     #     nds.append(gridElements.Node(tabx[i], taby[i]))
     npc = 3
+
     element = gridElements.Element4w(npc)
     grid = gridElements.Grid(nodes, elements)
 
@@ -52,15 +54,11 @@ if __name__ == '__main__':
     for i in range(len(grid.elements)):
         for j in range(element.npc*element.npc):
             jak = hmatrix.Jakobian(grid, i, element, j)
-            # print(jak.dXdZ, " ", jak.dYdZ)
-            # print(jak.dXdE, " ", jak.dYdE)
             odwJak = hmatrix.JakobianOdw(jak)
-            # print()
-            # print(odwJak.dYdE, " ", odwJak.mdYdZ)
-            # print(odwJak.mdXdE, " ", odwJak.dXdZ)
-            # print()
             h = hmatrix.MacierzSztywnosciH(odwJak, npc, element)
+            c = cmatrix.MacierzC(element, npc, jak)
             grid.elements[i].H = h
+            grid.elements[i].Cmatrix = c
             hbc = hmatrix.Hbc(element, npc, grid, i)
             grid.elements[i].Hbc = hbc
             pm = pmatrix.Pmatrix(element, npc, grid, i)
@@ -68,7 +66,7 @@ if __name__ == '__main__':
 
     print("==================================")
     print()
-    print("Macierz P:")
+    print("Macierz C:")
 
     # for i in range(len(grid.elements)):
     #     for j in range(4):
@@ -77,6 +75,8 @@ if __name__ == '__main__':
     #     print("++++++++++++++++++++++++++++++++++")
     temp = generate.hAgregate(grid)
     temp2 = generate.pAgregate(grid)
+    temp3 = generate.cAgregate(grid)
     for i in range(len(grid.nodes)):
             #print(temp[i])
-            print(temp2[i])
+            #print(temp2[i])
+            print(temp3[i])

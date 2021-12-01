@@ -1,4 +1,5 @@
 import gdata
+import diff
 
 class Node:
     def __init__(self, x, y, bc=0):
@@ -13,6 +14,7 @@ class Element:
     H = [[0 for _ in range(4)] for _ in range(4)]
     Hbc = [[0 for _ in range(4)] for _ in range(4)]
     Pmatrix = [0 for _ in range(4)]
+    Cmatrix = [[0 for _ in range(4)] for _ in range(4)]
 
 
 class Element4w:
@@ -22,6 +24,8 @@ class Element4w:
         self.dNdE = [[0 for _ in range(npc*npc)]  for _ in range(4)]
         self.npc = npc
         self.pcb = [[0 for _ in range(npc)] for _ in range(4)]
+        self.ksztaltN = [[0 for _ in range(npc*npc)] for _ in range(4)]
+
         data = gdata.GlobalData()
 
         if npc == 2:
@@ -29,6 +33,7 @@ class Element4w:
 
         elif npc == 3:
             wezly=data.wezly3p
+
         self.pc =[]
         for i in range(npc*npc):
             self.pc.append(Node(0,0))
@@ -57,6 +62,10 @@ class Element4w:
             self.pcb[1][i] = Node(wezly[i], -1)
             self.pcb[2][i] = Node(1, wezly[i])
             self.pcb[3][i] = Node(wezly[i], 1)
+
+        for i in range(len(self.pc)):
+            for j in range(4):
+                self.ksztaltN[j][i] = diff.funkcjaKsztaltuN(self.pc[i], j)
 
         del data
 
