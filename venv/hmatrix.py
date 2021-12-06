@@ -3,18 +3,6 @@ import diff
 import numpy
 
 class Jakobian:
-    # def __init__(self, nkfs : list, element4w, npc):
-    #     self.dXdZ = 0
-    #     self.dXdE = 0
-    #     self.dYdZ = 0
-    #     self.dYdE = 0
-    #     for b in range(4):
-    #         self.dXdZ += nkfs[b].x * element4w.dNdZ[b][npc]
-    #         self.dXdE += nkfs[b].x * element4w.dNdE[b][npc]
-    #         self.dYdZ += nkfs[b].y * element4w.dNdZ[b][npc]
-    #         self.dYdE += nkfs[b].y * element4w.dNdE[b][npc]
-    #     self.det = (self.dXdZ * self.dYdE) - (self.dXdE * self.dYdZ)
-
     def __init__(self, grid, i, element4w, npc):
         self.dXdZ = 0
         self.dXdE = 0
@@ -42,35 +30,35 @@ class JakobianOdw:
         self.det = jakobian.det
 
 class MacierzSztywnosciH:
-    def __init__(self, jakobianOdw, npc, element):
-        self.H = [[0 for _ in range(4)] for _ in range(4)]
+    def __init__(self, jakobianOdw, npc, element, conductivity):
         data = gdata.GlobalData()
+        self.H = [[0 for _ in range(4)] for _ in range(4)]
         npcCounter = 0;
         for n in range(npc):
             for i in range(npc):
                 self.dNdX = []
                 self.dNdY = []
                 for j in range(4):
-                    self.dNdX.append(jakobianOdw.dYdE * element.dNdZ[j][npcCounter] + jakobianOdw.mdYdZ * element.dNdE[j][npcCounter])
-                    self.dNdY.append(jakobianOdw.mdXdE * element.dNdZ[j][npcCounter] + jakobianOdw.dXdZ * element.dNdE[j][npcCounter])
+                    self.dNdX.append(jakobianOdw[npcCounter].dYdE * element.dNdZ[j][npcCounter] + jakobianOdw[npcCounter].mdYdZ * element.dNdE[j][npcCounter])
+                    self.dNdY.append(jakobianOdw[npcCounter].mdXdE * element.dNdZ[j][npcCounter] + jakobianOdw[npcCounter].dXdZ * element.dNdE[j][npcCounter])
                 tempH = [[0 for _ in range(4)] for _ in range(4)]
-                npcCounter += 1
-
                 if(npc == 3):
                     for k in range(4):
                         for j in range(4):
                             tempH[k][j] = self.dNdX[j]*self.dNdX[k] + self.dNdY[k]*self.dNdY[j]
-                            tempH[k][j] *= data.k * jakobianOdw.det * data.wagi3p[n]*data.wagi3p[i]
+                            tempH[k][j] *= conductivity * jakobianOdw[npcCounter].det * data.wagi3p[n]*data.wagi3p[i]
                             self.H[k][j] += tempH[k][j]
                 else:
                     for k in range(4):
                         for j in range(4):
                             tempH[k][j] = self.dNdX[j]*self.dNdX[k] + self.dNdY[k]*self.dNdY[j]
-                            tempH[k][j] *= data.k * jakobianOdw.det
+                            tempH[k][j] *= conductivihy * jakobianOdw[npcCounter].det
                             self.H[k][j] += tempH[k][j]
+                npcCounter += 1
+
 
 class Hbc:
-    def __init__(self, element, npc, grid, i):
+    def __init__(self, element, npc, grid, i, alpha):
         data = gdata.GlobalData()
         self.Hbc = [[0 for _ in range(4)] for _ in range(4)]
         tempH = [[0 for _ in range(4)] for _ in range(4)]
@@ -99,7 +87,7 @@ class Hbc:
                             temp += data.wagi3p[l] * diff.funkcjaKsztaltuN(element.pcb[i][l],j) * diff.funkcjaKsztaltuN(element.pcb[i][l],k)
                             #dodawanie osobno wartości dla każdego miejsca w macierzy Hbc[j][k]
                             #praktycznie: waga pc * N[j] * N[k], to powtórzone dla każdego punktu całkowania na boku i, oraz zsumowane
-                        temp *= data.alpha * sides[i]/2       #mnożenie przez stałe dla każdej wartości i długość boku
+                        temp *= alpha * sides[i]/2       #mnożenie przez stałe dla każdej wartości i długość boku
                         self.Hbc[j][k] += temp
 
         else:
@@ -109,5 +97,5 @@ class Hbc:
                         temp = 0.0
                         for l in range(npc):  #pętla dla ilości punktów całkowania
                             temp += diff.funkcjaKsztaltuN(element.pcb[i][l],j) * diff.funkcjaKsztaltuN(element.pcb[i][l],k)
-                        temp *= data.alpha * sides[i]/2
+                        temp *= alpha * sides[i]/2
                         self.Hbc[j][k] += temp

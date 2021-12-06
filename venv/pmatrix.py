@@ -3,7 +3,7 @@ import diff
 import numpy
 
 class Pmatrix:
-    def __init__(self, element, npc, grid, i):
+    def __init__(self, element, npc, grid, i, alpha, temperature):
         data = gdata.GlobalData()
         self.pmatrix = [0 for _ in range(4)]
         nodes = []
@@ -27,7 +27,7 @@ class Pmatrix:
                     temp = 0
                     for k in range(npc):
                         temp += data.wagi3p[k] * diff.funkcjaKsztaltuN(element.pcb[i][k],j)
-                    temp *= data.alpha * data.temp * sides[i]/2
+                    temp *= alpha * temperature * sides[i]/2
                     self.pmatrix[j] += temp
 
         else:
@@ -36,5 +36,5 @@ class Pmatrix:
                     temp = 0
                     for k in range(npc):
                         temp += diff.funkcjaKsztaltuN(element.pcb[i][k],j)
-                    temp *= data.alpha * data.temp * sides[i]/2
+                    temp *= alpha * temperature * sides[i]/2
                     self.pmatrix[j] += temp

@@ -14,10 +14,11 @@ def generate_nodes(data):
 def generate_elements(data):
     elements = []
     n = 1
+    nn = 0
     for i in range(data.nB-1):
         for j in range(data.nH-1):
                 elements.append(gridElements.Element(n+j, n+data.nH+j, n+data.nH+1+j, n+1+j))
-
+                nn += 1
         n += data.nH
     return elements
 

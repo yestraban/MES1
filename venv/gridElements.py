@@ -1,5 +1,9 @@
 import gdata
 import diff
+import hmatrix
+import pmatrix
+import cmatrix
+import generate
 
 class Node:
     def __init__(self, x, y, bc=0):
@@ -15,6 +19,11 @@ class Element:
     Hbc = [[0 for _ in range(4)] for _ in range(4)]
     Pmatrix = [0 for _ in range(4)]
     Cmatrix = [[0 for _ in range(4)] for _ in range(4)]
+    k = 0
+    alpha = 0
+    temp = 0
+    ro = 0
+    cp = 0
 
 
 class Element4w:
@@ -25,9 +34,7 @@ class Element4w:
         self.npc = npc
         self.pcb = [[0 for _ in range(npc)] for _ in range(4)]
         self.ksztaltN = [[0 for _ in range(npc*npc)] for _ in range(4)]
-
         data = gdata.GlobalData()
-
         if npc == 2:
             wezly = data.wezly2p
 
@@ -66,13 +73,32 @@ class Element4w:
         for i in range(len(self.pc)):
             for j in range(4):
                 self.ksztaltN[j][i] = diff.funkcjaKsztaltuN(self.pc[i], j)
-
         del data
 
 
 class Grid:
-    def __init__(self, nodes, elements):
+    def __init__(self, nodes, elements, npc, k, alpha, temp, ro, cp):
         self.nodes = nodes
         self.elements = elements
         self.Haggr = [[0 for _ in range(len(nodes))] for _ in range(len(nodes))]
+        self.Caggr = [[0 for _ in range(len(nodes))] for _ in range(len(nodes))]
         self.Paggr = [0 for _ in range(len(nodes))]
+        odwJak = [0 for _ in range(npc*npc)]
+        element = Element4w(npc)
+        for i in range(len(self.elements)):
+            for j in range(npc * npc):
+                jak = hmatrix.Jakobian(self, i, element, j)
+                odwJak[j] = hmatrix.JakobianOdw(jak)
+            self.elements[i].k = k[i]
+            self.elements[i].alpha = alpha[i]
+            self.elements[i].temp = temp[i]
+            self.elements[i].ro = ro[i]
+            self.elements[i].cp = cp[i]
+            self.elements[i].H = hmatrix.MacierzSztywnosciH(odwJak, npc, element, elements[i].k)
+            self.elements[i].Cmatrix = cmatrix.MacierzC(element, npc, jak, elements[i].ro, elements[i].cp)
+            self.elements[i].Hbc = hmatrix.Hbc(element, npc, self, i, elements[i].alpha)
+            self.elements[i].Pmatrix = pmatrix.Pmatrix(element, npc, self, i, elements[i].alpha, elements[i].temp)
+
+        self.Haggr = generate.hAgregate(self)
+        self.Paggr = generate.pAgregate(self)
+        self.Caggr = generate.cAgregate(self)

@@ -41,7 +41,15 @@ if __name__ == '__main__':
     npc = 3
 
     element = gridElements.Element4w(npc)
-    grid = gridElements.Grid(nodes, elements)
+    elementsk = [25 for _ in range(len(elements))]          #generowanie danych do elementu, tu można zmienić w razie potrzeby
+    elementsalpha = [300 for _ in range(len(elements))]
+    elementstemp = [1200 for _ in range(len(elements))]
+    elementsro = [7800 for _ in range(len(elements))]
+    elementscp = [700 for _ in range(len(elements))]
+    data = gdata.GlobalData()
+
+    grid = gridElements.Grid(nodes, elements, npc, elementsk, elementsalpha, elementstemp, elementsro, elementscp)
+
 
     # jak = Jakobian(nds, element, 0)
     # print(jak.dXdZ, " ", jak.dYdZ)
@@ -51,32 +59,18 @@ if __name__ == '__main__':
     # print(odwJak.dYdE, " ", odwJak.mdYdZ)
     # print(odwJak.mdXdE, " ", odwJak.dXdZ)
 
-    for i in range(len(grid.elements)):
-        for j in range(element.npc*element.npc):
-            jak = hmatrix.Jakobian(grid, i, element, j)
-            odwJak = hmatrix.JakobianOdw(jak)
-            h = hmatrix.MacierzSztywnosciH(odwJak, npc, element)
-            c = cmatrix.MacierzC(element, npc, jak)
-            grid.elements[i].H = h
-            grid.elements[i].Cmatrix = c
-            hbc = hmatrix.Hbc(element, npc, grid, i)
-            grid.elements[i].Hbc = hbc
-            pm = pmatrix.Pmatrix(element, npc, grid, i)
-            grid.elements[i].Pmatrix = pm
 
     print("==================================")
     print()
-    print("Macierz C:")
+    #print("Macierz C:")
 
     # for i in range(len(grid.elements)):
     #     for j in range(4):
     #         #print(grid.elements[i].H.H[j])  #macierz H
     #         print(grid.elements[i].Hbc.Hbc[j])   #macierz Hbc
     #     print("++++++++++++++++++++++++++++++++++")
-    temp = generate.hAgregate(grid)
-    temp2 = generate.pAgregate(grid)
-    temp3 = generate.cAgregate(grid)
+    # temp3 = generate.cAgregate(grid)
     for i in range(len(grid.nodes)):
-            #print(temp[i])
-            #print(temp2[i])
-            print(temp3[i])
+        print(grid.Haggr[i])
+    #         #print(temp2[i])
+    #         print(temp3[i])

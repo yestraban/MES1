@@ -8,8 +8,3 @@ class GlobalData:
     wagi3p = [5/9, 8/9, 5/9]
     wezly2p = [-1/numpy.sqrt(3), 1/numpy.sqrt(3)]
     wezly3p = [-numpy.sqrt(3/5), 0, numpy.sqrt(3/5)]
-    k = 25
-    alpha = 300  #jest git, tylko trzeba dać możliwość zmieniania dla każdego elementu
-    temp = 1200
-    ro = 7800
-    cp = 700
