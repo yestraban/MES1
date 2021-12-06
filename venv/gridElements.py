@@ -95,7 +95,7 @@ class Grid:
             self.elements[i].ro = ro[i]
             self.elements[i].cp = cp[i]
             self.elements[i].H = hmatrix.MacierzSztywnosciH(odwJak, npc, element, elements[i].k)
-            self.elements[i].Cmatrix = cmatrix.MacierzC(element, npc, jak, elements[i].ro, elements[i].cp)
+            self.elements[i].Cmatrix = cmatrix.MacierzC(element, npc, odwJak, elements[i].ro, elements[i].cp)
             self.elements[i].Hbc = hmatrix.Hbc(element, npc, self, i, elements[i].alpha)
             self.elements[i].Pmatrix = pmatrix.Pmatrix(element, npc, self, i, elements[i].alpha, elements[i].temp)
 
