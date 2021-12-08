@@ -9,6 +9,7 @@ import gdata
 import generate
 import pmatrix
 import cmatrix
+import calculateT
 
 
 if __name__ == '__main__':
@@ -69,8 +70,32 @@ if __name__ == '__main__':
     #         #print(grid.elements[i].H.H[j])  #macierz H
     #         print(grid.elements[i].Hbc.Hbc[j])   #macierz Hbc
     #     print("++++++++++++++++++++++++++++++++++")
-    # temp3 = generate.cAgregate(grid)
+
+    # for i in range(len(grid.nodes)):
+    #     print(grid.Haggr[i])
+    t0  = [100 for _ in range(len(nodes))]
+    temp = calculateT.temperatureStep(grid, t0)
+    min =100000
+    max = 0
     for i in range(len(grid.nodes)):
-        print(grid.Haggr[i])
-    #         #print(temp2[i])
-    #         print(temp3[i])
+        print(temp[i])
+        if(temp[i]<min):
+            min = temp[i]
+        if (temp[i] > max):
+            max = temp[i]
+
+    print("min: ", min, "  max: ", max)
+    print("iteracja 1:")
+
+    t0 = temp
+    temp = calculateT.temperatureStep(grid, t0)
+    min = 100000
+    max = 0
+    for i in range(len(grid.nodes)):
+        print(temp[i])
+        if (temp[i] < min):
+            min = temp[i]
+        if (temp[i] > max):
+            max = temp[i]
+
+    print("min: ", min, "  max: ", max)

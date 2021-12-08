@@ -98,6 +98,10 @@ class Grid:
             self.elements[i].H = hmatrix.MacierzSztywnosciH(odwJak, npc, element, elements[i].k)
             self.elements[i].Cmatrix = cmatrix.MacierzC(element, npc, odwJak, elements[i].ro, elements[i].cp)
             self.elements[i].Hbc = hmatrix.Hbc(element, npc, self, i, elements[i].alpha)
+            # print("element ", i)
+            # for l in range(4):
+            #     print(self.elements[i].Hbc.Hbc[l])
+            # print()
             self.elements[i].Pmatrix = pmatrix.Pmatrix(element, npc, self, i, elements[i].alpha, elements[i].temp)
 
         self.Haggr = generate.hAgregate(self)
