@@ -71,6 +71,6 @@ if __name__ == '__main__':
     #     print("++++++++++++++++++++++++++++++++++")
     # temp3 = generate.cAgregate(grid)
     for i in range(len(grid.nodes)):
-        print(grid.Caggr[i])
+        print(grid.Haggr[i])
     #         #print(temp2[i])
     #         print(temp3[i])

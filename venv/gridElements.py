@@ -81,6 +81,7 @@ class Grid:
         self.nodes = nodes
         self.elements = elements
         self.Haggr = [[0 for _ in range(len(nodes))] for _ in range(len(nodes))]
+        self.Hbcaggr = [[0 for _ in range(len(nodes))] for _ in range(len(nodes))]
         self.Caggr = [[0 for _ in range(len(nodes))] for _ in range(len(nodes))]
         self.Paggr = [0 for _ in range(len(nodes))]
         odwJak = [0 for _ in range(npc*npc)]
@@ -102,3 +103,5 @@ class Grid:
         self.Haggr = generate.hAgregate(self)
         self.Paggr = generate.pAgregate(self)
         self.Caggr = generate.cAgregate(self)
+        self.Hbcaggr = generate.hbcAggregate(self)
+        self.Haggr = generate.addHandHBC(self)

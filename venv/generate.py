@@ -44,3 +44,18 @@ def cAgregate(grid):
             for y in range(4):
                 Caggr[grid.elements[i].id[x] - 1][grid.elements[i].id[y] - 1] += grid.elements[i].Cmatrix.C[x][y]
     return Caggr
+
+def hbcAggregate(grid):
+    hbcaggr = [[0 for _ in range(len(grid.nodes))] for _ in range(len(grid.nodes))]
+    for i in range(len(grid.elements)):
+        for x in range(4):
+            for y in range(4):
+                hbcaggr[grid.elements[i].id[x] - 1][grid.elements[i].id[y] - 1] += grid.elements[i].Hbc.Hbc[x][y]
+    return hbcaggr
+
+def addHandHBC(grid):
+    HHBCaggr = [[0 for _ in range(len(grid.nodes))] for _ in range(len(grid.nodes))]
+    for i in range (len(grid.nodes)):
+        for j in range(len(grid.nodes)):
+            HHBCaggr[i][j] = grid.Haggr[i][j] + grid.Hbcaggr[i][j]
+    return HHBCaggr
