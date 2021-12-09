@@ -9,3 +9,4 @@ Code files are located in venv folder with contents detiailed below: <br>
 - gdata.py - Contains basic variables for grid creation and necessary lists for Gauss integrals
 - generate.py - Methods for generating nodes/elements and aggregation of all matrixes
 - gridElements.py - Basic structures for grid calculations
+- calculateT.py - Method for calculating thermal state of a grid after a given time, taking previous thermal state as an argument
