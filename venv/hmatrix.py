@@ -52,7 +52,7 @@ class MacierzSztywnosciH:
                     for k in range(4):
                         for j in range(4):
                             tempH[k][j] = self.dNdX[j]*self.dNdX[k] + self.dNdY[k]*self.dNdY[j]
-                            tempH[k][j] *= conductivihy * jakobianOdw[npcCounter].det
+                            tempH[k][j] *= conductivity * jakobianOdw[npcCounter].det
                             self.H[k][j] += tempH[k][j]
                 npcCounter += 1
 

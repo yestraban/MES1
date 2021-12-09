@@ -103,6 +103,7 @@ class Grid:
             #     print(self.elements[i].Hbc.Hbc[l])
             # print()
             self.elements[i].Pmatrix = pmatrix.Pmatrix(element, npc, self, i, elements[i].alpha, elements[i].temp)
+            print(self.elements[i].Pmatrix.pmatrix)
 
         self.Haggr = generate.hAgregate(self)
         self.Paggr = generate.pAgregate(self)
