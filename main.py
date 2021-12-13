@@ -10,14 +10,16 @@ import generate
 import pmatrix
 import cmatrix
 import calculateT
-
+import fileLoad
 
 if __name__ == '__main__':
-    nodes = generate.generate_nodes(gdata.GlobalData)
+
+    grid, simTime, dt, initT = fileLoad.loadFile("testcase.txt")
+
   #  for i in range(len(nodes)):
    #     print(nodes[i].x, " ", nodes[i].y)
 
-    elements = generate.generate_elements(gdata.GlobalData)
+   # elements = generate.generate_elements(gdata.GlobalData)
   #  for i in range(len(elements)):
    #     print(elements[i].id)
 
@@ -33,7 +35,6 @@ if __name__ == '__main__':
  #   wynik = calkowanie_gaussa_2d(funkcja_2d, 3)
   #  print(wynik)
 
-
     # tabx = [0, 0.025, 0.025, 0]
     # taby = [0, 0, 0.025, 0.025]
     # nds = []
@@ -41,15 +42,15 @@ if __name__ == '__main__':
     #     nds.append(gridElements.Node(tabx[i], taby[i]))
     npc = 3
 
-    element = gridElements.Element4w(npc)
-    elementsk = [25 for _ in range(len(elements))]          #generowanie danych do elementu, tu można zmienić w razie potrzeby
-    elementsalpha = [300 for _ in range(len(elements))]
-    elementstemp = [1200 for _ in range(len(elements))]
-    elementsro = [7800 for _ in range(len(elements))]
-    elementscp = [700 for _ in range(len(elements))]
-    data = gdata.GlobalData()
-
-    grid = gridElements.Grid(nodes, elements, npc, elementsk, elementsalpha, elementstemp, elementsro, elementscp)
+    # element = gridElements.Element4w(npc)
+    # elementsk = [25 for _ in range(len(elements))]          #generowanie danych do elementu, tu można zmienić w razie potrzeby
+    # elementsalpha = [300 for _ in range(len(elements))]
+    # elementstemp = [1200 for _ in range(len(elements))]
+    # elementsro = [7800 for _ in range(len(elements))]
+    # elementscp = [700 for _ in range(len(elements))]
+    # data = gdata.GlobalData()
+    #
+    # grid = gridElements.Grid(nodes, elements, npc, elementsk, elementsalpha, elementstemp, elementsro, elementscp)
 
 
     # jak = Jakobian(nds, element, 0)
@@ -73,29 +74,19 @@ if __name__ == '__main__':
 
     # for i in range(len(grid.nodes)):
     #     print(grid.Haggr[i])
-    t0  = [100 for _ in range(len(nodes))]
-    temp = calculateT.temperatureStep(grid, t0)
-    min =100000
-    max = 0
-    for i in range(len(grid.nodes)):
-        print(temp[i])
-        if(temp[i]<min):
-            min = temp[i]
-        if (temp[i] > max):
-            max = temp[i]
+    t0  = [initT for _ in range(len(grid.nodes))]
 
-    print("min: ", min, "  max: ", max)
-    print("iteracja 1:")
+    for j in range(5):
+        temp = calculateT.temperatureStep(grid, t0, dt)
+        min =100000
+        max = 0
+        for i in range(len(grid.nodes)):
+            #print(temp[i])
+            if(temp[i]<min):
+                min = temp[i]
+            if (temp[i] > max):
+                max = temp[i]
+        print("iteracja ",j,": min: ", min, "  max: ", max)
+        t0 = temp
+    print()
 
-    t0 = temp
-    temp = calculateT.temperatureStep(grid, t0)
-    min = 100000
-    max = 0
-    for i in range(len(grid.nodes)):
-        print(temp[i])
-        if (temp[i] < min):
-            min = temp[i]
-        if (temp[i] > max):
-            max = temp[i]
-
-    print("min: ", min, "  max: ", max)
