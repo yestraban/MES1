@@ -14,7 +14,7 @@ import fileLoad
 
 if __name__ == '__main__':
 
-    grid, simTime, dt, initT = fileLoad.loadFile("testcase.txt")
+    grid, simTime, dt, initT = fileLoad.loadFile("testcase2.txt")
 
   #  for i in range(len(nodes)):
    #     print(nodes[i].x, " ", nodes[i].y)
@@ -75,10 +75,11 @@ if __name__ == '__main__':
     # for i in range(len(grid.nodes)):
     #     print(grid.Haggr[i])
     t0  = [initT for _ in range(len(grid.nodes))]
-
-    for j in range(5):
+    tt = 0
+    while(tt <= simTime):
+        tt += dt
         temp = calculateT.temperatureStep(grid, t0, dt)
-        min =100000
+        min = 100000
         max = 0
         for i in range(len(grid.nodes)):
             #print(temp[i])
@@ -86,7 +87,7 @@ if __name__ == '__main__':
                 min = temp[i]
             if (temp[i] > max):
                 max = temp[i]
-        print("iteracja ",j,": min: ", min, "  max: ", max)
+        print("czas ",tt,": min: ", min, "  max: ", max)
         t0 = temp
     print()
 
