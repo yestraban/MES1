@@ -9,28 +9,28 @@ def loadFile(fileName):
     elements = []
 
     temp = file.readline().split()      #odczytanie charakterystycznych wartości
-    simulationTime = int(temp[1])
+    simulationTime = float(temp[1])
 
     temp = file.readline().split()
-    dt = int(temp[1])
+    dt = float(temp[1])
 
     temp = file.readline().split()
-    conductivity = int(temp[1])
+    conductivity = float(temp[1])
 
     temp = file.readline().split()
-    alpha = int(temp[1])
+    alpha = float(temp[1])
 
     temp = file.readline().split()
-    tot = int(temp[1])
+    tot = float(temp[1])
 
     temp = file.readline().split()
-    initialT = int(temp[1])
+    initialT = float(temp[1])
 
     temp = file.readline().split()
-    ro = int(temp[1])
+    ro = float(temp[1])
 
     temp = file.readline().split()
-    cp = int(temp[1])
+    cp = float(temp[1])
 
     temp = file.readline().split()
     nNodes = int(temp[2])
@@ -59,7 +59,7 @@ def loadFile(fileName):
 
     # for i in range(nNodes):
     #     if(nodes[i].x==maxx or nodes[i].x==minx or nodes[i].y==miny or nodes[i].y==maxy):
-    #         nodes[i].bc=1   #nadanie warunku brzegowego
+    #         nodes[i].bc = 1   #nadanie warunku brzegowego
 
     file.readline()
 

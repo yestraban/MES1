@@ -34,14 +34,15 @@ class Element4w:
         self.npc = npc
         self.pcb = [[0 for _ in range(npc)] for _ in range(4)]
         self.ksztaltN = [[0 for _ in range(npc*npc)] for _ in range(4)]
+        self.pc = []
         data = gdata.GlobalData()
+
         if npc == 2:
             wezly = data.wezly2p
 
         elif npc == 3:
             wezly=data.wezly3p
 
-        self.pc =[]
         for i in range(npc*npc):
             self.pc.append(Node(0,0))
         i = 0

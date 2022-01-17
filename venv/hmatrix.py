@@ -69,7 +69,7 @@ class Hbc:
             nodes.append(grid.nodes[temp - 1])
 
         sides.append((numpy.sqrt((nodes[3].x - nodes[0].x) * (nodes[3].x - nodes[0].x) + (nodes[3].y - nodes[0].y) * (
-                    nodes[3].y - nodes[0].y)))*nodes[0].bc*nodes[3].bc) #dopytać czy może być tak że mnożenie przez warunek brzegowy nodeów na boku
+                    nodes[3].y - nodes[0].y)))*nodes[0].bc*nodes[3].bc)
 
         for b in range(3):
             sides.append(numpy.sqrt(
@@ -87,7 +87,7 @@ class Hbc:
                             temp += data.wagi3p[l] * diff.funkcjaKsztaltuN(element.pcb[i][l],j) * diff.funkcjaKsztaltuN(element.pcb[i][l],k)
                             #dodawanie osobno wartości dla każdego miejsca w macierzy Hbc[j][k]
                             #praktycznie: waga pc * N[j] * N[k], to powtórzone dla każdego punktu całkowania na boku i, oraz zsumowane
-                        temp *= alpha * sides[i]/2       #mnożenie przez stałe dla każdej wartości i długość boku
+                        temp *= alpha * sides[i]/2       #mnożenie przez stałe dla każdej wartości i jakobian boku
                         self.Hbc[j][k] += temp
 
         else:
