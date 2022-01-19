@@ -1,9 +1,9 @@
-SimulationTime 500
+SimulationTime 5000
 SimulationStepTime 50
 Conductivity 25
-Alfa 300
-Tot 1200
-InitialTemp 100
+Alfa -11
+Tot 30
+InitialTemp 120
 Density 7800
 SpecificHeat 700
 Nodes number 16

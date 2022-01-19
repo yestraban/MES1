@@ -110,3 +110,4 @@ class Grid:
         self.Caggr = generate.cAgregate(self)
         self.Hbcaggr = generate.hbcAggregate(self)
         self.Haggr = generate.addHandHBC(self)
+

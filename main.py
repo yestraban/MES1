@@ -3,36 +3,20 @@
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import calculateT
 import fileLoad
+import generate
+import gdata
+import gridElements
+import plot
 
 if __name__ == '__main__':
 
-    grid, simTime, dt, initT = fileLoad.loadFile("testcase3.txt")
+    #grid, simTime, dt, initT = fileLoad.loadFile("testcase2.txt")
 
-  #  for i in range(len(nodes)):
-   #     print(nodes[i].x, " ", nodes[i].y)
+    nodes = generate.generate_nodes(gdata.GlobalData)
+    elements = generate.generate_elements(gdata.GlobalData)
 
-   # elements = generate.generate_elements(gdata.GlobalData)
-  #  for i in range(len(elements)):
-   #     print(elements[i].id)
-
-  #  wynik = calkowanie_gaussa_1d(funkcja_1d, 2)
-   # print(wynik)
-
-  #  wynik = calkowanie_gaussa_1d(funkcja_1d, 3)
- #   print(wynik)
-
- #   wynik = calkowanie_gaussa_2d(funkcja_2d, 2)
- #   print(wynik)
-
- #   wynik = calkowanie_gaussa_2d(funkcja_2d, 3)
-  #  print(wynik)
-
-    # tabx = [0, 0.025, 0.025, 0]
-    # taby = [0, 0, 0.025, 0.025]
-    # nds = []
-    # for i in range(4):
-    #     nds.append(gridElements.Node(tabx[i], taby[i]))
     npc = 3
+    elementsk, elementsalpha, elementstemp, elementsro, elementscp, t0 = generate.generateConstants(elements, nodes)
 
     # element = gridElements.Element4w(npc)
     # elementsk = [25 for _ in range(len(elements))]          #generowanie danych do elementu, tu można zmienić w razie potrzeby
@@ -40,9 +24,9 @@ if __name__ == '__main__':
     # elementstemp = [1200 for _ in range(len(elements))]
     # elementsro = [7800 for _ in range(len(elements))]
     # elementscp = [700 for _ in range(len(elements))]
-    # data = gdata.GlobalData()
+    data = gdata.GlobalData()
     #
-    # grid = gridElements.Grid(nodes, elements, npc, elementsk, elementsalpha, elementstemp, elementsro, elementscp)
+    grid = gridElements.Grid(nodes, elements, npc, elementsk, elementsalpha, elementstemp, elementsro, elementscp)
 
 
     # jak = Jakobian(nds, element, 0)
@@ -66,10 +50,12 @@ if __name__ == '__main__':
 
     # for i in range(len(grid.nodes)):
     #     print(grid.Haggr[i])
-    t0  = [initT for _ in range(len(grid.nodes))]
     tt = 0
-    while(tt <= simTime):
+    dt = 1
+    tend = 100
+    while(tt <= tend):
         tt += dt
+        t0 = generate.fixTemp(t0, elements, nodes)
         temp = calculateT.temperatureStep(grid, t0, dt)
         min = 100000
         max = 0
@@ -82,4 +68,5 @@ if __name__ == '__main__':
         print("czas ",tt,": min: ", min, "  max: ", max)
         t0 = temp
     print()
-
+    t0 = generate.fixTemp(t0, elements, nodes)
+    plot.plot_all(grid, t0)
