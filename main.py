@@ -1,20 +1,12 @@
 # This is a sample Python script.
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-import numpy
-import gridElements
-import diff
-import hmatrix
-import gdata
-import generate
-import pmatrix
-import cmatrix
 import calculateT
 import fileLoad
 
 if __name__ == '__main__':
 
-    grid, simTime, dt, initT = fileLoad.loadFile("testcase2.txt")
+    grid, simTime, dt, initT = fileLoad.loadFile("testcase3.txt")
 
   #  for i in range(len(nodes)):
    #     print(nodes[i].x, " ", nodes[i].y)

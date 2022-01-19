@@ -16,6 +16,7 @@ class MacierzC:
                             temp *= ro * cp * jakobianOdw[npcCounter].det * data.wagi3p[n] * data.wagi3p[i]
                             self.C[j][k] += temp
                     npcCounter += 1
+
         else:
             for n in range(npc):
                 for i in range(npc):

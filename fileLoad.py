@@ -40,26 +40,9 @@ def loadFile(fileName):
 
     file.readline()
 
-    # minx = 10   #znajdowanie minimalnych i maksymalnych wartości do wyznaczenia warunku brzegowego
-    # miny = 10
-    # maxx = -1
-    # maxy = -1
-
     for i in range(nNodes):                             #czytanie elementow
         temp = file.readline().split(',')
-        # if(float(temp[1])<minx):
-        #     minx = float(temp[1])
-        # if (float(temp[1]) > maxx):
-        #     maxx = float(temp[1])
-        # if (float(temp[1]) < miny):
-        #     miny = float(temp[1])
-        # if (float(temp[1]) > maxy):
-        #     maxy = float(temp[1])
         nodes.append(gridElements.Node(float(temp[1]), float(temp[2])))
-
-    # for i in range(nNodes):
-    #     if(nodes[i].x==maxx or nodes[i].x==minx or nodes[i].y==miny or nodes[i].y==maxy):
-    #         nodes[i].bc = 1   #nadanie warunku brzegowego
 
     file.readline()
 
