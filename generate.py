@@ -1,6 +1,7 @@
 import gridElements
 import gdata
 
+
 def generate_nodes(data):
     nodes = []
     for i in range(data.nB):
@@ -18,20 +19,22 @@ def generate_elements(data):
     elements = []
     n = 1
     nn = 0
-    for i in range(data.nB-1):
-        for j in range(data.nH-1):
-                elements.append(gridElements.Element(n+j, n+data.nH+j, n+data.nH+1+j, n+1+j))
-                nn += 1
+    for i in range(data.nB - 1):
+        for j in range(data.nH - 1):
+            elements.append(gridElements.Element(n + j, n + data.nH + j, n + data.nH + 1 + j, n + 1 + j))
+            nn += 1
         n += data.nH
     return elements
+
 
 def hAgregate(grid):
     Haggr = [[0 for _ in range(len(grid.nodes))] for _ in range(len(grid.nodes))]
     for i in range(len(grid.elements)):
         for x in range(4):
             for y in range(4):
-                Haggr[grid.elements[i].id[x]-1][grid.elements[i].id[y]-1] += grid.elements[i].H.H[x][y]
+                Haggr[grid.elements[i].id[x] - 1][grid.elements[i].id[y] - 1] += grid.elements[i].H.H[x][y]
     return Haggr
+
 
 def pAgregate(grid):
     Paggr = [0 for _ in range(len(grid.nodes))]
@@ -39,6 +42,7 @@ def pAgregate(grid):
         for x in range(4):
             Paggr[grid.elements[i].id[x] - 1] += grid.elements[i].Pmatrix.pmatrix[x]
     return Paggr
+
 
 def cAgregate(grid):
     Caggr = [[0 for _ in range(len(grid.nodes))] for _ in range(len(grid.nodes))]
@@ -48,6 +52,7 @@ def cAgregate(grid):
                 Caggr[grid.elements[i].id[x] - 1][grid.elements[i].id[y] - 1] += grid.elements[i].Cmatrix.C[x][y]
     return Caggr
 
+
 def hbcAggregate(grid):
     hbcaggr = [[0 for _ in range(len(grid.nodes))] for _ in range(len(grid.nodes))]
     for i in range(len(grid.elements)):
@@ -56,9 +61,10 @@ def hbcAggregate(grid):
                 hbcaggr[grid.elements[i].id[x] - 1][grid.elements[i].id[y] - 1] += grid.elements[i].Hbc.Hbc[x][y]
     return hbcaggr
 
+
 def addHandHBC(grid):
     HHBCaggr = [[0 for _ in range(len(grid.nodes))] for _ in range(len(grid.nodes))]
-    for i in range (len(grid.nodes)):
+    for i in range(len(grid.nodes)):
         for j in range(len(grid.nodes)):
             HHBCaggr[i][j] = grid.Haggr[i][j] + grid.Hbcaggr[i][j]
     return HHBCaggr
@@ -70,13 +76,13 @@ def generateConstants(elements, nodes):
     tempAmbient = [30 for _ in range(len(elements))]
     ro = []
     cp = []
-    initTemp = [100 for _ in range(len(nodes))]
+    initTemp = [40 for _ in range(len(nodes))]
 
     for i in range(len(elements)):
         xsr, ysr = 0.0, 0.0
         for j in range(4):
-            xsr += nodes[elements[i].id[j]-1].x
-            ysr += nodes[elements[i].id[j]-1].y
+            xsr += nodes[elements[i].id[j] - 1].x
+            ysr += nodes[elements[i].id[j] - 1].y
         xsr /= 4.0
         ysr /= 4.0
 
@@ -85,14 +91,18 @@ def generateConstants(elements, nodes):
             alpha.append(0)
             ro.append(8933)
             cp.append(386)
+            for j in range(4):
+                initTemp[elements[i].id[j]-1] = 180
 
         elif gdata.warunekAluminium(xsr, ysr):
             k.append(239)
-            alpha.append(-11)
+            alpha.append(-14.28)
             ro.append(2720)
             cp.append(900)
-            nodes[elements[i].id[2]-1].bc = 1
-            nodes[elements[i].id[3]-1].bc = 1
+            nodes[elements[i].id[2] - 1].bc = 1
+            nodes[elements[i].id[3] - 1].bc = 1
+            for j in range(4):
+                initTemp[elements[i].id[j]-1] = 180
 
         else:
             k.append(0.43)
@@ -107,11 +117,30 @@ def fixTemp(temperatures, elements, nodes):
     for i in range(len(elements)):
         xsr, ysr = 0.0, 0.0
         for j in range(4):
-            xsr += nodes[elements[i].id[j]-1].x
-            ysr += nodes[elements[i].id[j]-1].y
+            xsr += nodes[elements[i].id[j] - 1].x
+            ysr += nodes[elements[i].id[j] - 1].y
         xsr /= 4.0
         ysr /= 4.0
         if gdata.warunekGlikol(xsr, ysr):
             for j in range(4):
-                temperatures[elements[i].id[j]-1] = 40.0
+                temperatures[elements[i].id[j] - 1] = 40.0
+    return temperatures
+
+
+def fixTempSim(temperatures, elements, nodes, filename):
+    file = open(filename, 'r')
+    newTemp = []
+    for i in range(len(nodes)):
+        newTemp.append(file.readline())
+
+    for i in range(len(elements)):
+        xsr, ysr = 0.0, 0.0
+        for j in range(4):
+            xsr += nodes[elements[i].id[j] - 1].x
+            ysr += nodes[elements[i].id[j] - 1].y
+        xsr /= 4.0
+        ysr /= 4.0
+        if (gdata.warunekAluminium(xsr, ysr) or gdata.warunekMiedz(xsr, ysr)) and (not gdata.warunekGlikol(xsr, ysr)):
+            for j in range(4):
+                temperatures[elements[i].id[j] - 1] = float(newTemp[elements[i].id[j] - 1])
     return temperatures
